@@ -1700,6 +1700,56 @@
               saveProgress(progress);
             }
 
+            // 홈 화면 과목 카드 진행률/복습 뱃지 업데이트 함수
+            function updateHomeCards() {
+              const today = new Date().toISOString().split('T')[0];
+              const progress = loadProgress();
+
+              // 과목별 설정 (카드 순서와 일치)
+              const subjects = [
+                { key: 'westminster',    total: 24 },
+                { key: 'church_politics', total: 7 },
+                { key: 'discipline',     total: 37 },
+                { key: 'worship',        total: 20 },
+                { key: '12creeds',       total: 10 },
+                { key: 'bible',          total: 23 }
+              ];
+
+              const cards = document.querySelectorAll('#view-home .card');
+
+              cards.forEach((card, i) => {
+                const subj = subjects[i];
+                const subjectQuestions = questions.filter(q => q.subject === subj.key);
+
+                // 오늘 복습 필요한 문제 수
+                let reviewCount = 0;
+                // 학습 완료한 문제 수 (한 번이라도 풀어본 문제)
+                let doneCount = 0;
+
+                subjectQuestions.forEach(q => {
+                  const record = progress[q.id];
+                  if (record) {
+                    doneCount++;
+                    if (record.reviewDate && record.reviewDate <= today) {
+                      reviewCount++;
+                    }
+                  }
+                });
+
+                // 진행률 계산
+                const percent = Math.round((doneCount / subj.total) * 100);
+
+                // 뱃지 업데이트
+                card.querySelector('.badge').textContent = `오늘 복습 ${reviewCount}문제`;
+
+                // 진행률 바 업데이트
+                card.querySelector('.progress-bar').style.width = `${percent}%`;
+
+                // 진행률 텍스트 업데이트
+                card.querySelector('.progress-text').textContent = `진행률 ${percent}%`;
+              });
+            }
+
             // --- 화면 전환 함수 ---
             // 특정 뷰와 그에 맞는 하단 고정 버튼을 표시하고, 나머지는 숨기는 함수
             function switchView(targetViewId) {
@@ -1901,9 +1951,13 @@
             const btnGoHome = document.getElementById('btn-go-home');
             if (btnGoHome) {
                 btnGoHome.addEventListener('click', () => {
+                    updateHomeCards(); // 홈으로 돌아갈 때 진행률 및 뱃지 업데이트
                     switchView('view-home');
                 });
             }
+
+            // 앱 시작 시 홈 카드 업데이트
+            updateHomeCards();
 
         });
     </script>
