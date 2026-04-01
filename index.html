@@ -421,7 +421,7 @@
 
         /* 홈 화면 추가 버튼 */
         .btn-install {
-            display: none;
+            display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
@@ -1920,20 +1920,25 @@
         let deferredPrompt;
         const btnInstall = document.getElementById('btn-install');
 
+        // Chrome/안드로이드: 자동 설치 팝업 지원
         window.addEventListener('beforeinstallprompt', (e) => {
           e.preventDefault();
           deferredPrompt = e;
-          btnInstall.style.display = 'flex';
         });
 
         btnInstall.addEventListener('click', async () => {
-          if (!deferredPrompt) return;
-          deferredPrompt.prompt();
-          const { outcome } = await deferredPrompt.userChoice;
-          if (outcome === 'accepted') {
-            btnInstall.style.display = 'none';
+          if (deferredPrompt) {
+            // Chrome: 설치 팝업 표시
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            deferredPrompt = null;
+            if (outcome === 'accepted') {
+              btnInstall.style.display = 'none';
+            }
+          } else {
+            // 삼성 인터넷 등: 수동 안내 메시지
+            alert('홈 화면에 추가하는 방법\n\n삼성 인터넷:\n하단 메뉴(☰) → 페이지 추가 → 홈 화면에 추가\n\nChrome:\n우측 상단 메뉴(⋮) → 홈 화면에 추가');
           }
-          deferredPrompt = null;
         });
 
         window.addEventListener('appinstalled', () => {
