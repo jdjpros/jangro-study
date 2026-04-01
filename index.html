@@ -419,25 +419,147 @@
             background-color: #0f172a;
         }
 
-        /* 홈 화면 추가 버튼 */
-        .btn-install {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            min-height: 56px;
-            font-size: 20px;
-            font-weight: 700;
-            background-color: #1e3a5f;
-            color: #ffffff;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            margin-bottom: 12px;
-            transition: background-color 0.2s;
+        /* 전체 현황 요약 카드 */
+        .summary-card {
+            margin: 20px 20px 0 20px;
+            background-color: #f0f9ff;
+            border: 2px solid #bae6fd;
+            border-radius: 16px;
+            padding: 20px 24px;
         }
-        .btn-install:active {
-            background-color: #0f172a;
+        .summary-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0369a1;
+            margin-bottom: 12px;
+        }
+        .summary-progress-bar-wrap {
+            background-color: #e2e8f0;
+            border-radius: 10px;
+            height: 14px;
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+        .summary-progress-bar-fill {
+            background-color: #0369a1;
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        .summary-progress-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0369a1;
+            text-align: right;
+            display: block;
+            margin-bottom: 12px;
+        }
+        .summary-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .summary-stat-item {
+            font-size: 18px;
+            color: #1a1a1a;
+            font-weight: 500;
+        }
+
+        /* 과목 카드 하단 행 */
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+        .card-count-text {
+            font-size: 16px;
+            color: #475569;
+            font-weight: 500;
+        }
+        .btn-reset-subject {
+            font-size: 16px;
+            color: #94a3b8;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+        .btn-reset-subject:active {
+            color: #ef4444;
+        }
+
+        /* 사용설명서 버튼 */
+        .btn-help {
+            background: none;
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 20px;
+            color: #e2e8f0;
+            font-size: 16px;
+            padding: 4px 14px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .btn-help:active {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        /* 사용설명서 팝업 오버레이 */
+        .help-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 200;
+            justify-content: center;
+            align-items: flex-end;
+        }
+        .help-overlay.active {
+            display: flex;
+        }
+        .help-modal {
+            background: #ffffff;
+            width: 100%;
+            max-width: 480px;
+            border-radius: 24px 24px 0 0;
+            padding: 28px 24px 40px 24px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .help-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .help-modal-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #1e3a5f;
+        }
+        .btn-help-close {
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #475569;
+            padding: 4px 8px;
+        }
+        .help-section {
+            margin-bottom: 24px;
+        }
+        .help-section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 10px;
+        }
+        .help-section-body {
+            font-size: 18px;
+            color: #1a1a1a;
+            line-height: 1.8;
         }
     </style>
 </head>
@@ -448,8 +570,23 @@
         <section id="view-home">
             <header class="header">
                 <h1>장로 고시 학습</h1>
-                <p>오늘도 한 걸음 더 가까이 📖</p>
+                <button type="button" class="btn-help" id="btn-help">
+                    📖 사용설명서
+                </button>
             </header>
+
+            <div class="summary-card" id="summary-card">
+                <div class="summary-title">📊 전체 학습 현황</div>
+                <div class="summary-progress-bar-wrap">
+                    <div class="summary-progress-bar-fill" id="summary-bar" style="width: 0%;"></div>
+                </div>
+                <span class="summary-progress-text" id="summary-text">0 / 121 문제</span>
+                <div class="summary-stats">
+                    <div class="summary-stat-item" id="summary-review">🔔 오늘 복습 0문제</div>
+                    <div class="summary-stat-item" id="summary-streak">🔥 연속 학습 0일</div>
+                    <div class="summary-stat-item" id="summary-last">📅 마지막 학습: 없음</div>
+                </div>
+            </div>
 
             <main class="card-list">
                 <a href="#" class="card">
@@ -463,6 +600,10 @@
                             <div class="progress-bar" style="width: 45%;"></div>
                         </div>
                         <span class="progress-text">진행률 45%</span>
+                        <div class="card-footer">
+                            <span class="card-count-text">0 / 24문제</span>
+                            <button type="button" class="btn-reset-subject">🗑️ 초기화</button>
+                        </div>
                     </div>
                 </a>
 
@@ -477,6 +618,10 @@
                             <div class="progress-bar" style="width: 70%;"></div>
                         </div>
                         <span class="progress-text">진행률 70%</span>
+                        <div class="card-footer">
+                            <span class="card-count-text">0 / 7문제</span>
+                            <button type="button" class="btn-reset-subject">🗑️ 초기화</button>
+                        </div>
                     </div>
                 </a>
 
@@ -491,6 +636,10 @@
                             <div class="progress-bar" style="width: 20%;"></div>
                         </div>
                         <span class="progress-text">진행률 20%</span>
+                        <div class="card-footer">
+                            <span class="card-count-text">0 / 37문제</span>
+                            <button type="button" class="btn-reset-subject">🗑️ 초기화</button>
+                        </div>
                     </div>
                 </a>
 
@@ -505,6 +654,10 @@
                             <div class="progress-bar" style="width: 85%;"></div>
                         </div>
                         <span class="progress-text">진행률 85%</span>
+                        <div class="card-footer">
+                            <span class="card-count-text">0 / 20문제</span>
+                            <button type="button" class="btn-reset-subject">🗑️ 초기화</button>
+                        </div>
                     </div>
                 </a>
 
@@ -519,6 +672,10 @@
                             <div class="progress-bar" style="width: 50%;"></div>
                         </div>
                         <span class="progress-text">진행률 50%</span>
+                        <div class="card-footer">
+                            <span class="card-count-text">0 / 10문제</span>
+                            <button type="button" class="btn-reset-subject">🗑️ 초기화</button>
+                        </div>
                     </div>
                 </a>
 
@@ -533,14 +690,15 @@
                             <div class="progress-bar" style="width: 30%;"></div>
                         </div>
                         <span class="progress-text">진행률 30%</span>
+                        <div class="card-footer">
+                            <span class="card-count-text">0 / 23문제</span>
+                            <button type="button" class="btn-reset-subject">🗑️ 초기화</button>
+                        </div>
                     </div>
                 </a>
             </main>
 
             <div class="bottom-fixed" id="bottom-home">
-                <button type="button" class="btn-install" id="btn-install">
-                    📱 홈 화면에 추가
-                </button>
                 <a href="#" class="btn-wrong-answers">
                     ❌ 오답 문제만 모아보기
                 </a>
@@ -647,6 +805,54 @@
             </div>
         </section>
 
+        <div class="help-overlay" id="help-overlay">
+            <div class="help-modal">
+                <div class="help-modal-header">
+                    <span class="help-modal-title">📖 사용설명서</span>
+                    <button type="button" class="btn-help-close" id="btn-help-close">✕</button>
+                </div>
+
+                <div class="help-section">
+                    <div class="help-section-title">📚 앱 사용 방법</div>
+                    <div class="help-section-body">
+                        1️⃣ 홈에서 공부할 과목을 탭하세요.<br>
+                        2️⃣ 문제를 읽고 마음속으로 답을 생각하세요.<br>
+                        3️⃣ [정답 보기]를 눌러 정답을 확인하세요.<br>
+                        4️⃣ 알았으면 ⭕ 알았음, 몰랐으면 ❌ 몰랐음을 누르세요.<br>
+                        5️⃣ 모든 문제를 마치면 학습 완료 화면이 나옵니다.
+                    </div>
+                </div>
+
+                <div class="help-section">
+                    <div class="help-section-title">🔁 복습 주기</div>
+                    <div class="help-section-body">
+                        ❌ 몰랐음 → 내일 다시 출제<br>
+                        ⭕ 알았음 1회 → 3일 후 출제<br>
+                        ⭕ 알았음 2회 연속 → 7일 후 출제<br>
+                        ⭕ 알았음 3회 이상 → 30일 후 출제<br><br>
+                        자주 틀리는 문제일수록 더 자주 나옵니다!
+                    </div>
+                </div>
+
+                <div class="help-section">
+                    <div class="help-section-title">📊 진행률 / 복습 뱃지</div>
+                    <div class="help-section-body">
+                        <b>진행률 바</b>: 전체 문제 중 한 번이라도 풀어본 문제 비율입니다.<br><br>
+                        <b>오늘 복습 N문제</b>: 오늘 복습 예정일이 된 문제 수입니다. 0이 되면 오늘 학습 완료!
+                    </div>
+                </div>
+
+                <div class="help-section">
+                    <div class="help-section-title">📱 홈 화면에 추가하는 방법</div>
+                    <div class="help-section-body">
+                        <b>삼성 인터넷:</b><br>
+                        하단 메뉴(☰) → 페이지 추가 → 홈 화면에 추가<br><br>
+                        <b>Chrome:</b><br>
+                        우측 상단 메뉴(⋮) → 홈 화면에 추가
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -820,7 +1026,7 @@
     "id": "d_011",
     "subject": "discipline",
     "subjectName": "권징 조례",
-    "question": "총회 상설 재판국에 대한 설명 중 틀린 것은?",
+    "question": "총회 상설 재판국에 대한 설명 중 틀린 초 것은?",
     "answer": "3) 성수는 13인 이상이어야 한다 (실제 11인 이상)",
     "keywords": ["상설 재판국", "성수"]
   },
@@ -1698,34 +1904,40 @@
                 r.reviewDate = getDateStr(1);
               }
               saveProgress(progress);
+
+              const todayStr = new Date().toISOString().split('T')[0];
+              const lastDate = localStorage.getItem('lastStudyDate');
+              const streak = parseInt(localStorage.getItem('studyStreak') || '0');
+              if (lastDate === todayStr) {
+                // 오늘 이미 학습
+              } else if (lastDate === getDateStr(-1)) {
+                localStorage.setItem('studyStreak', streak + 1);
+              } else {
+                localStorage.setItem('studyStreak', 1);
+              }
+              localStorage.setItem('lastStudyDate', todayStr);
             }
 
-            // 홈 화면 과목 카드 진행률/복습 뱃지 업데이트 함수
             function updateHomeCards() {
               const today = new Date().toISOString().split('T')[0];
               const progress = loadProgress();
-
-              // 과목별 설정 (카드 순서와 일치)
               const subjects = [
-                { key: 'westminster',    total: 24 },
-                { key: 'church_politics', total: 7 },
-                { key: 'discipline',     total: 37 },
-                { key: 'worship',        total: 20 },
-                { key: '12creeds',       total: 10 },
-                { key: 'bible',          total: 23 }
+                { key: 'westminster',     total: 24 },
+                { key: 'church_politics', total: 7  },
+                { key: 'discipline',      total: 37 },
+                { key: 'worship',         total: 20 },
+                { key: '12creeds',        total: 10 },
+                { key: 'bible',           total: 23 }
               ];
-
               const cards = document.querySelectorAll('#view-home .card');
+              let totalDone = 0;
+              let totalReview = 0;
 
               cards.forEach((card, i) => {
                 const subj = subjects[i];
                 const subjectQuestions = questions.filter(q => q.subject === subj.key);
-
-                // 오늘 복습 필요한 문제 수
                 let reviewCount = 0;
-                // 학습 완료한 문제 수 (한 번이라도 풀어본 문제)
                 let doneCount = 0;
-
                 subjectQuestions.forEach(q => {
                   const record = progress[q.id];
                   if (record) {
@@ -1735,19 +1947,25 @@
                     }
                   }
                 });
-
-                // 진행률 계산
                 const percent = Math.round((doneCount / subj.total) * 100);
-
-                // 뱃지 업데이트
                 card.querySelector('.badge').textContent = `오늘 복습 ${reviewCount}문제`;
-
-                // 진행률 바 업데이트
                 card.querySelector('.progress-bar').style.width = `${percent}%`;
-
-                // 진행률 텍스트 업데이트
                 card.querySelector('.progress-text').textContent = `진행률 ${percent}%`;
+                card.querySelector('.card-count-text').textContent = `${doneCount} / ${subj.total}문제`;
+                totalDone += doneCount;
+                totalReview += reviewCount;
               });
+
+              const totalPercent = Math.round((totalDone / 121) * 100);
+              document.getElementById('summary-bar').style.width = `${totalPercent}%`;
+              document.getElementById('summary-text').textContent = `${totalDone} / 121 문제`;
+              document.getElementById('summary-review').textContent = `🔔 오늘 복습 ${totalReview}문제`;
+
+              const streak = parseInt(localStorage.getItem('studyStreak') || '0');
+              const lastDate = localStorage.getItem('lastStudyDate') || '없음';
+              document.getElementById('summary-streak').textContent = `🔥 연속 학습 ${streak}일`;
+              document.getElementById('summary-last').textContent =
+                `📅 마지막 학습: ${lastDate === '없음' ? '없음' : lastDate}`;
             }
 
             // --- 화면 전환 함수 ---
@@ -1956,6 +2174,37 @@
                 });
             }
 
+            const resetBtns = document.querySelectorAll('.btn-reset-subject');
+            const subjectKeys = [
+              'westminster', 'church_politics', 'discipline',
+              'worship', '12creeds', 'bible'
+            ];
+            resetBtns.forEach((btn, i) => {
+              btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const cardTitle = document.querySelectorAll(
+                  '#view-home .card-title')[i].textContent;
+                if (!confirm(`"${cardTitle}" 과목의 진도를 초기화할까요?`)) return;
+                const progress = loadProgress();
+                questions.filter(q => q.subject === subjectKeys[i])
+                         .forEach(q => delete progress[q.id]);
+                saveProgress(progress);
+                updateHomeCards();
+              });
+            });
+
+            const helpOverlay = document.getElementById('help-overlay');
+            document.getElementById('btn-help').addEventListener('click', () => {
+              helpOverlay.classList.add('active');
+            });
+            document.getElementById('btn-help-close').addEventListener('click', () => {
+              helpOverlay.classList.remove('active');
+            });
+            helpOverlay.addEventListener('click', (e) => {
+              if (e.target === helpOverlay) helpOverlay.classList.remove('active');
+            });
+
             // 앱 시작 시 홈 카드 업데이트
             updateHomeCards();
 
@@ -1969,36 +2218,6 @@
               .catch(err => console.log('서비스워커 등록 실패:', err));
           });
         }
-
-        // 홈 화면 추가 버튼 로직
-        let deferredPrompt;
-        const btnInstall = document.getElementById('btn-install');
-
-        // Chrome/안드로이드: 자동 설치 팝업 지원
-        window.addEventListener('beforeinstallprompt', (e) => {
-          e.preventDefault();
-          deferredPrompt = e;
-        });
-
-        btnInstall.addEventListener('click', async () => {
-          if (deferredPrompt) {
-            // Chrome: 설치 팝업 표시
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            deferredPrompt = null;
-            if (outcome === 'accepted') {
-              btnInstall.style.display = 'none';
-            }
-          } else {
-            // 삼성 인터넷 등: 수동 안내 메시지
-            alert('홈 화면에 추가하는 방법\n\n삼성 인터넷:\n하단 메뉴(☰) → 페이지 추가 → 홈 화면에 추가\n\nChrome:\n우측 상단 메뉴(⋮) → 홈 화면에 추가');
-          }
-        });
-
-        window.addEventListener('appinstalled', () => {
-          btnInstall.style.display = 'none';
-          deferredPrompt = null;
-        });
     </script>
 </body>
 </html>
