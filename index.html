@@ -418,6 +418,27 @@
         .btn-go-home:active {
             background-color: #0f172a;
         }
+
+        /* 홈 화면 추가 버튼 */
+        .btn-install {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 56px;
+            font-size: 20px;
+            font-weight: 700;
+            background-color: #1e3a5f;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: background-color 0.2s;
+        }
+        .btn-install:active {
+            background-color: #0f172a;
+        }
     </style>
 </head>
 <body>
@@ -517,6 +538,9 @@
             </main>
 
             <div class="bottom-fixed" id="bottom-home">
+                <button type="button" class="btn-install" id="btn-install">
+                    📱 홈 화면에 추가
+                </button>
                 <a href="#" class="btn-wrong-answers">
                     ❌ 오답 문제만 모아보기
                 </a>
@@ -805,7 +829,7 @@
     "subject": "discipline",
     "subjectName": "권징 조례",
     "question": "상소 소송과 관련하여 틀린 것은?",
-    "answer": "2) 그 처분이 있은 후 60일 이내에 청원해야 한다 (실제 30일 이내)",
+    "answer": "2) 그 처분이 있은 후 60일 이내에 청원해야 연다 (실제 30일 이내)",
     "keywords": ["상소 소송", "청원 기간"]
   },
   {
@@ -1891,6 +1915,31 @@
               .catch(err => console.log('서비스워커 등록 실패:', err));
           });
         }
+
+        // 홈 화면 추가 버튼 로직
+        let deferredPrompt;
+        const btnInstall = document.getElementById('btn-install');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+          e.preventDefault();
+          deferredPrompt = e;
+          btnInstall.style.display = 'flex';
+        });
+
+        btnInstall.addEventListener('click', async () => {
+          if (!deferredPrompt) return;
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') {
+            btnInstall.style.display = 'none';
+          }
+          deferredPrompt = null;
+        });
+
+        window.addEventListener('appinstalled', () => {
+          btnInstall.style.display = 'none';
+          deferredPrompt = null;
+        });
     </script>
 </body>
 </html>
