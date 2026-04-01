@@ -128,6 +128,23 @@
             margin-bottom: 16px;
         }
 
+        /* 카드 내 재풀기 버튼 */
+        .btn-card-replay {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 8px;
+            margin-bottom: 16px;
+            padding: 6px 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #0369a1;
+            background: #e0f2fe;
+            border: 1.5px solid #7dd3fc;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .btn-card-replay:active { background: #bae6fd; }
+
         .progress-wrapper {
             margin-top: 8px;
         }
@@ -561,6 +578,160 @@
             color: #1a1a1a;
             line-height: 1.8;
         }
+        /* 재풀기 버튼 */
+        .btn-replay-subject {
+            font-size: 16px;
+            color: #0369a1;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+        .btn-replay-subject:active {
+            color: #1e3a5f;
+        }
+
+        /* 카드 푸터 버튼 그룹 */
+        .card-footer-btns {
+            display: flex;
+            gap: 4px;
+        }
+
+        /* 오늘 목표 뱃지 */
+        .badge-goal {
+            display: inline-block;
+            background-color: #fef9c3;
+            color: #854d0e;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            margin-left: 8px;
+        }
+        .badge-goal.hidden { display: none; }
+
+        /* 회독 설정 팝업 */
+        .study-plan-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 200;
+            justify-content: center;
+            align-items: flex-end;
+        }
+        .study-plan-overlay.active { display: flex; }
+        .study-plan-modal {
+            background: #ffffff;
+            width: 100%;
+            max-width: 480px;
+            border-radius: 24px 24px 0 0;
+            padding: 28px 24px 40px 24px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .study-plan-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .study-plan-modal-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #1e3a5f;
+        }
+        .btn-study-plan-close {
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #475569;
+            padding: 4px 8px;
+        }
+        .study-plan-field {
+            margin-bottom: 20px;
+        }
+        .study-plan-label {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .study-plan-input {
+            width: 100%;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e3a5f;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 14px 16px;
+            text-align: center;
+            outline: none;
+        }
+        .study-plan-input:focus { border-color: #1e3a5f; }
+        .study-plan-hint {
+            font-size: 16px;
+            color: #64748b;
+            margin-top: 8px;
+            display: block;
+        }
+        .study-plan-preview {
+            background-color: #f0f9ff;
+            border: 2px solid #bae6fd;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #0369a1;
+            font-weight: 600;
+            min-height: 56px;
+            display: flex;
+            align-items: center;
+        }
+        .btn-study-plan-save {
+            width: 100%;
+            min-height: 56px;
+            font-size: 20px;
+            font-weight: 700;
+            background-color: #1e3a5f;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .btn-study-plan-save:active { background-color: #0f172a; }
+        .btn-study-plan-clear {
+            width: 100%;
+            min-height: 48px;
+            font-size: 18px;
+            font-weight: 600;
+            background: none;
+            color: #94a3b8;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* 전체 현황 카드 내 회독 설정 버튼 */
+        .btn-study-plan-open {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 8px 16px;
+            background-color: #1e3a5f;
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-study-plan-open:active { background-color: #0f172a; }
+
         /* 객관식 보기 목록 (G-02 문제 화면) */
         .choices-list {
             list-style: none;
@@ -582,9 +753,10 @@
         <section id="view-home">
             <header class="header">
                 <h1>장로 고시 학습</h1>
-                <button type="button" class="btn-help" id="btn-help">
-                    📖 사용설명서
-                </button>
+                <div style="display:flex; gap:8px; justify-content:center; margin-top:4px;">
+                    <button type="button" class="btn-help" id="btn-help">📖 사용설명서</button>
+                    <button type="button" class="btn-help" id="btn-study-plan-open">📅 회독 설정</button>
+                </div>
             </header>
 
             <div class="summary-card" id="summary-card">
@@ -606,7 +778,7 @@
                         <h2 class="card-title">웨스트민스터 소요리문답</h2>
                         <span class="card-icon">📜</span>
                     </div>
-                    <div class="badge">오늘 복습 5문제</div>
+                    <div class="badge">오늘 복습 5문제</div><button type="button" class="btn-card-replay">🔄 재풀기</button><span class="badge-goal hidden">오늘 목표 0문제</span>
                     <div class="progress-wrapper">
                         <div class="progress-container">
                             <div class="progress-bar" style="width: 45%;"></div>
@@ -614,7 +786,6 @@
                         <span class="progress-text">진행률 45%</span>
                         <div class="card-footer">
                             <span class="card-count-text">0 / 24문제</span>
-                            <button type="button" class="btn-reset-subject">🗑️ 초기화</button>
                         </div>
                     </div>
                 </a>
@@ -624,7 +795,7 @@
                         <h2 class="card-title">교회 정치</h2>
                         <span class="card-icon">⚖️</span>
                     </div>
-                    <div class="badge">오늘 복습 2문제</div>
+                    <div class="badge">오늘 복습 2문제</div><button type="button" class="btn-card-replay">🔄 재풀기</button><span class="badge-goal hidden">오늘 목표 0문제</span>
                     <div class="progress-wrapper">
                         <div class="progress-container">
                             <div class="progress-bar" style="width: 70%;"></div>
@@ -632,7 +803,6 @@
                         <span class="progress-text">진행률 70%</span>
                         <div class="card-footer">
                             <span class="card-count-text">0 / 7문제</span>
-                            <button type="button" class="btn-reset-subject">🗑️ 초기화</button>
                         </div>
                     </div>
                 </a>
@@ -642,7 +812,7 @@
                         <h2 class="card-title">권징 조례</h2>
                         <span class="card-icon">🔨</span>
                     </div>
-                    <div class="badge">오늘 복습 0문제</div>
+                    <div class="badge">오늘 복습 0문제</div><button type="button" class="btn-card-replay">🔄 재풀기</button><span class="badge-goal hidden">오늘 목표 0문제</span>
                     <div class="progress-wrapper">
                         <div class="progress-container">
                             <div class="progress-bar" style="width: 20%;"></div>
@@ -650,7 +820,6 @@
                         <span class="progress-text">진행률 20%</span>
                         <div class="card-footer">
                             <span class="card-count-text">0 / 37문제</span>
-                            <button type="button" class="btn-reset-subject">🗑️ 초기화</button>
                         </div>
                     </div>
                 </a>
@@ -660,7 +829,7 @@
                         <h2 class="card-title">예배 모범</h2>
                         <span class="card-icon">🙏</span>
                     </div>
-                    <div class="badge">오늘 복습 8문제</div>
+                    <div class="badge">오늘 복습 8문제</div><button type="button" class="btn-card-replay">🔄 재풀기</button><span class="badge-goal hidden">오늘 목표 0문제</span>
                     <div class="progress-wrapper">
                         <div class="progress-container">
                             <div class="progress-bar" style="width: 85%;"></div>
@@ -668,7 +837,6 @@
                         <span class="progress-text">진행률 85%</span>
                         <div class="card-footer">
                             <span class="card-count-text">0 / 20문제</span>
-                            <button type="button" class="btn-reset-subject">🗑️ 초기화</button>
                         </div>
                     </div>
                 </a>
@@ -678,7 +846,7 @@
                         <h2 class="card-title">한국 장로교 12신조</h2>
                         <span class="card-icon">✝️</span>
                     </div>
-                    <div class="badge">오늘 복습 3문제</div>
+                    <div class="badge">오늘 복습 3문제</div><button type="button" class="btn-card-replay">🔄 재풀기</button><span class="badge-goal hidden">오늘 목표 0문제</span>
                     <div class="progress-wrapper">
                         <div class="progress-container">
                             <div class="progress-bar" style="width: 50%;"></div>
@@ -686,7 +854,6 @@
                         <span class="progress-text">진행률 50%</span>
                         <div class="card-footer">
                             <span class="card-count-text">0 / 10문제</span>
-                            <button type="button" class="btn-reset-subject">🗑️ 초기화</button>
                         </div>
                     </div>
                 </a>
@@ -696,7 +863,7 @@
                         <h2 class="card-title">성경 (구약/신약)</h2>
                         <span class="card-icon">📖</span>
                     </div>
-                    <div class="badge">오늘 복습 12문제</div>
+                    <div class="badge">오늘 복습 12문제</div><button type="button" class="btn-card-replay">🔄 재풀기</button><span class="badge-goal hidden">오늘 목표 0문제</span>
                     <div class="progress-wrapper">
                         <div class="progress-container">
                             <div class="progress-bar" style="width: 30%;"></div>
@@ -704,7 +871,6 @@
                         <span class="progress-text">진행률 30%</span>
                         <div class="card-footer">
                             <span class="card-count-text">0 / 23문제</span>
-                            <button type="button" class="btn-reset-subject">🗑️ 초기화</button>
                         </div>
                     </div>
                 </a>
@@ -866,6 +1032,34 @@
                         <b>Chrome:</b><br>
                         우측 상단 메뉴(⋮) → 홈 화면에 추가
                     </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- 회독 설정 팝업 -->
+        <div class="study-plan-overlay" id="study-plan-overlay">
+            <div class="study-plan-modal">
+                <div class="study-plan-modal-header">
+                    <span class="study-plan-modal-title">📅 회독 설정</span>
+                    <button type="button" class="btn-study-plan-close" id="btn-study-plan-close">✕</button>
+                </div>
+                <div class="study-plan-field">
+                    <label class="study-plan-label" for="input-study-days">총 학습 기간 (일)</label>
+                    <input type="number" id="input-study-days" class="study-plan-input"
+                        min="1" max="365" placeholder="예: 30">
+                    <span class="study-plan-hint">오늘부터 며칠 안에 1회독을 완료할지 입력하세요.</span>
+                </div>
+                <div class="study-plan-preview" id="study-plan-preview">
+                    기간을 입력하면 과목별 하루 목표 문제 수가 표시됩니다.
+                </div>
+                <button type="button" class="btn-study-plan-save" id="btn-study-plan-save">저장하기</button>
+                <button type="button" class="btn-study-plan-clear" id="btn-study-plan-clear">회독 설정 해제</button>
+
+                <hr style="border:0; border-top:1px solid #e2e8f0; margin: 24px 0;">
+                <div style="font-size:18px; font-weight:700; color:#1e3a5f; margin-bottom:14px;">⚙️ 과목별 관리</div>
+                <div id="subject-manage-list" style="display:flex; flex-direction:column; gap:10px;">
+                    <!-- JS로 렌더링 -->
                 </div>
             </div>
         </div>
@@ -2227,6 +2421,7 @@
             btnBacks.forEach(btn => {
                 btn.addEventListener('click', () => {
                     updateHomeCards(); // 뒤로가기 시 진행률 및 뱃지 업데이트
+                    updateGoalBadges();
                     switchView('view-home');
                 });
             });
@@ -2236,6 +2431,7 @@
             if (btnGoHome) {
                 btnGoHome.addEventListener('click', () => {
                     updateHomeCards(); // 홈으로 돌아갈 때 진행률 및 뱃지 업데이트
+                    updateGoalBadges();
                     switchView('view-home');
                 });
             }
@@ -2243,28 +2439,91 @@
             // 브라우저 뒤로가기 버튼 처리
             window.addEventListener('popstate', () => {
                 updateHomeCards();
+                updateGoalBadges();
                 switchView('view-home', false);
             });
 
-            const resetBtns = document.querySelectorAll('.btn-reset-subject');
             const subjectKeys = [
               'westminster', 'church_politics', 'discipline',
               'worship', '12creeds', 'bible'
             ];
-            resetBtns.forEach((btn, i) => {
+            const subjectNames = [
+              '웨스트민스터 소요리문답', '교회 정치', '권징 조례',
+              '예배 모범', '한국 장로교 12신조', '성경 (구약/신약)'
+            ];
+
+            // 카드 내 재풀기 버튼 이벤트
+            document.querySelectorAll('.btn-card-replay').forEach((btn, i) => {
               btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                const cardTitle = document.querySelectorAll(
-                  '#view-home .card-title')[i].textContent;
-                if (!confirm(`"${cardTitle}" 과목의 진도를 초기화할까요?`)) return;
-                const progress = loadProgress();
-                questions.filter(q => q.subject === subjectKeys[i])
-                         .forEach(q => delete progress[q.id]);
-                saveProgress(progress);
-                updateHomeCards();
+                doReplay(i);
               });
             });
+
+            // 과목별 재풀기/초기화 실행 함수
+            function doReplay(i) {
+              if (!confirm(`"${subjectNames[i]}" 과목을 재풀기 할까요?\n\n✅ 정답/오답 이력은 유지됩니다.\n(이미 푼 문제가 오늘 다시 출제됩니다.)`)) return;
+              const progress = loadProgress();
+              const today = new Date().toISOString().split('T')[0];
+              questions.filter(q => q.subject === subjectKeys[i]).forEach(q => {
+                if (progress[q.id]) {
+                  progress[q.id].reviewDate = today;
+                } else {
+                  progress[q.id] = { status: 'unknown', reviewDate: today, failCount: 0, correctStreak: 0 };
+                }
+              });
+              saveProgress(progress);
+              updateHomeCards();
+              updateGoalBadges();
+              alert(`"${subjectNames[i]}" 재풀기 설정 완료!\n복습 필요 문제 모아보기에서 시작하세요.`);
+            }
+
+            function doReset(i) {
+              if (!confirm(`"${subjectNames[i]}" 과목을 완전히 초기화할까요?\n\n⚠️ 정답/오답 이력이 모두 삭제됩니다.`)) return;
+              const progress = loadProgress();
+              questions.filter(q => q.subject === subjectKeys[i])
+                       .forEach(q => delete progress[q.id]);
+              saveProgress(progress);
+              updateHomeCards();
+              updateGoalBadges();
+            }
+
+            // 팝업 내 과목 관리 목록 렌더링
+            function renderSubjectManageList() {
+              const list = document.getElementById('subject-manage-list');
+              list.innerHTML = subjectNames.map((name, i) => `
+                <div style="display:flex; justify-content:space-between; align-items:center;
+                            background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px;">
+                  <span style="font-size:17px; font-weight:600; color:#1a1a1a;">${name}</span>
+                  <div style="display:flex; gap:6px;">
+                    <button type="button" data-idx="${i}" class="manage-replay-btn"
+                      style="font-size:15px; font-weight:600; color:#0369a1; background:#e0f2fe;
+                             border:none; border-radius:8px; padding:7px 12px; cursor:pointer;">
+                      🔄 재풀기
+                    </button>
+                    <button type="button" data-idx="${i}" class="manage-reset-btn"
+                      style="font-size:15px; font-weight:600; color:#b91c1c; background:#fee2e2;
+                             border:none; border-radius:8px; padding:7px 12px; cursor:pointer;">
+                      🗑️ 초기화
+                    </button>
+                  </div>
+                </div>
+              `).join('');
+
+              list.querySelectorAll('.manage-replay-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                  e.stopPropagation();
+                  doReplay(parseInt(btn.dataset.idx));
+                });
+              });
+              list.querySelectorAll('.manage-reset-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                  e.stopPropagation();
+                  doReset(parseInt(btn.dataset.idx));
+                });
+              });
+            }
 
             const helpOverlay = document.getElementById('help-overlay');
 
@@ -2302,8 +2561,124 @@
               if (e.target === helpOverlay) helpOverlay.classList.remove('active');
             });
 
+            // ── 회독 설정 팝업 로직 ──────────────────────────────────
+            const studyPlanOverlay = document.getElementById('study-plan-overlay');
+            const inputStudyDays   = document.getElementById('input-study-days');
+            const studyPlanPreview = document.getElementById('study-plan-preview');
+
+            const PLAN_KEY = 'studyPlanDays';
+            const PLAN_START_KEY = 'studyPlanStart';
+
+            function calcDailyGoals(days) {
+              // 과목별 전체 문제 수
+              const subjects = [
+                { key: 'westminster',     name: '웨스트민스터 소요리문답', total: 24 },
+                { key: 'church_politics', name: '교회 정치',             total: 7  },
+                { key: 'discipline',      name: '권징 조례',             total: 37 },
+                { key: 'worship',         name: '예배 모범',             total: 20 },
+                { key: '12creeds',        name: '한국 장로교 12신조',    total: 10 },
+                { key: 'bible',           name: '성경 (구약/신약)',      total: 23 }
+              ];
+              return subjects.map(s => ({
+                ...s,
+                daily: Math.ceil(s.total / days)
+              }));
+            }
+
+            function renderStudyPlanPreview(days) {
+              if (!days || days < 1) {
+                studyPlanPreview.textContent = '기간을 입력하면 과목별 하루 목표 문제 수가 표시됩니다.';
+                return;
+              }
+              const goals = calcDailyGoals(days);
+              const lines = goals.map(g => `${g.name}: 하루 ${g.daily}문제`).join('<br>');
+              studyPlanPreview.innerHTML = `<div><b>${days}일 회독 기준</b><br><br>${lines}</div>`;
+            }
+
+            function updateGoalBadges() {
+              const savedDays  = parseInt(localStorage.getItem(PLAN_KEY) || '0');
+              const savedStart = localStorage.getItem(PLAN_START_KEY);
+              const cards = document.querySelectorAll('#view-home .card');
+              const goalBadges = document.querySelectorAll('#view-home .badge-goal');
+
+              if (!savedDays || !savedStart) {
+                goalBadges.forEach(b => b.classList.add('hidden'));
+                return;
+              }
+
+              const startDate = new Date(savedStart);
+              const today     = new Date();
+              const elapsed   = Math.floor((today - startDate) / 86400000); // 경과 일수
+              const remaining = Math.max(savedDays - elapsed, 1);
+
+              const subjects = [
+                { key: 'westminster',     total: 24 },
+                { key: 'church_politics', total: 7  },
+                { key: 'discipline',      total: 37 },
+                { key: 'worship',         total: 20 },
+                { key: '12creeds',        total: 10 },
+                { key: 'bible',           total: 23 }
+              ];
+              const progress = loadProgress();
+
+              cards.forEach((card, i) => {
+                const subj = subjects[i];
+                const badge = goalBadges[i];
+                // 아직 안 푼 문제 수
+                const notDone = questions.filter(q =>
+                  q.subject === subj.key && !progress[q.id]
+                ).length;
+                const daily = Math.ceil(notDone / remaining);
+                badge.textContent = `📌 오늘 목표 ${daily}문제`;
+                badge.classList.toggle('hidden', notDone === 0);
+              });
+            }
+
+            inputStudyDays.addEventListener('input', () => {
+              renderStudyPlanPreview(parseInt(inputStudyDays.value));
+            });
+
+            document.getElementById('btn-study-plan-open').addEventListener('click', () => {
+              const saved = localStorage.getItem(PLAN_KEY);
+              if (saved) inputStudyDays.value = saved;
+              renderStudyPlanPreview(parseInt(inputStudyDays.value) || 0);
+              renderSubjectManageList();
+              studyPlanOverlay.classList.add('active');
+            });
+
+            document.getElementById('btn-study-plan-close').addEventListener('click', () => {
+              studyPlanOverlay.classList.remove('active');
+            });
+
+            studyPlanOverlay.addEventListener('click', (e) => {
+              if (e.target === studyPlanOverlay) studyPlanOverlay.classList.remove('active');
+            });
+
+            document.getElementById('btn-study-plan-save').addEventListener('click', () => {
+              const days = parseInt(inputStudyDays.value);
+              if (!days || days < 1) { alert('1일 이상의 기간을 입력해 주세요.'); return; }
+              localStorage.setItem(PLAN_KEY, days);
+              localStorage.setItem(PLAN_START_KEY, new Date().toISOString().split('T')[0]);
+              studyPlanOverlay.classList.remove('active');
+              updateGoalBadges();
+              alert(`✅ ${days}일 회독 설정 완료!\n각 과목 카드에 오늘 목표 문제 수가 표시됩니다.`);
+            });
+
+            document.getElementById('btn-study-plan-clear').addEventListener('click', (e) => {
+              e.stopPropagation();
+              if (!confirm('회독 설정을 해제할까요?')) return;
+              localStorage.removeItem(PLAN_KEY);
+              localStorage.removeItem(PLAN_START_KEY);
+              inputStudyDays.value = '';
+              studyPlanPreview.textContent = '기간을 입력하면 과목별 하루 목표 문제 수가 표시됩니다.';
+              studyPlanOverlay.classList.remove('active');
+              updateGoalBadges();
+              alert('회독 설정이 해제되었습니다.');
+            });
+
             // 앱 시작 시 홈 카드 업데이트
             updateHomeCards();
+            updateGoalBadges();
 
         });
     </script>
