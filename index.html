@@ -160,12 +160,12 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            min-height: 56px; /* 모든 버튼 높이 최소 56px 규칙 준수 */
+            min-height: 56px;
             font-size: 20px;
             font-weight: 700;
-            background-color: #fef2f2;
-            color: #dc2626; /* 경고/오답을 의미하는 붉은색 계열 */
-            border: 2px solid #fca5a5;
+            background-color: #fff7ed;
+            color: #c2410c;
+            border: 2px solid #fdba74;
             border-radius: 12px;
             cursor: pointer;
             text-decoration: none;
@@ -173,7 +173,7 @@
         }
 
         .btn-wrong-answers:active {
-            background-color: #fee2e2;
+            background-color: #ffedd5;
         }
 
         /* =========================================
@@ -711,9 +711,9 @@
             </main>
 
             <div class="bottom-fixed" id="bottom-home">
-                <a href="#" class="btn-wrong-answers">
-                    ❌ 오답 문제만 모아보기
-                </a>
+                <button type="button" class="btn-wrong-answers" id="btn-review-mode">
+                    🔔 복습 필요 문제만 모아보기
+                </button>
             </div>
         </section>
 
@@ -2187,8 +2187,10 @@
                       const resultItems = document.querySelectorAll('#view-complete .result-item');
                       resultItems[0].textContent = `✅ 맞은 문제: ${sessionCorrect}문제`;
                       resultItems[1].textContent = `❌ 틀린 문제: ${sessionWrong}문제`;
-                      document.querySelectorAll('#view-complete .result-item')[2]
-                        .textContent = `📚 학습한 과목: ${currentQuestions[0].subjectName}`;
+                      const subjectSet = [...new Set(currentQuestions.map(q => q.subjectName))];
+                      resultItems[2].textContent = subjectSet.length > 1
+                        ? `📚 학습한 과목: 복습 모아보기 (${subjectSet.length}과목)`
+                        : `📚 학습한 과목: ${subjectSet[0]}`;
                       switchView('view-complete');
                     } else {
                       renderQuestion();
@@ -2208,8 +2210,10 @@
                       const resultItems = document.querySelectorAll('#view-complete .result-item');
                       resultItems[0].textContent = `✅ 맞은 문제: ${sessionCorrect}문제`;
                       resultItems[1].textContent = `❌ 틀린 문제: ${sessionWrong}문제`;
-                      document.querySelectorAll('#view-complete .result-item')[2]
-                        .textContent = `📚 학습한 과목: ${currentQuestions[0].subjectName}`;
+                      const subjectSet = [...new Set(currentQuestions.map(q => q.subjectName))];
+                      resultItems[2].textContent = subjectSet.length > 1
+                        ? `📚 학습한 과목: 복습 모아보기 (${subjectSet.length}과목)`
+                        : `📚 학습한 과목: ${subjectSet[0]}`;
                       switchView('view-complete');
                     } else {
                       renderQuestion();
@@ -2263,6 +2267,31 @@
             });
 
             const helpOverlay = document.getElementById('help-overlay');
+
+            // 복습 필요 문제 모아보기 버튼
+            document.getElementById('btn-review-mode').addEventListener('click', (e) => {
+                e.preventDefault();
+                const today = new Date().toISOString().split('T')[0];
+                const progress = loadProgress();
+
+                // reviewDate가 오늘 이하인 문제만 필터링
+                const reviewQuestions = questions.filter(q => {
+                    const r = progress[q.id];
+                    return r && r.reviewDate && r.reviewDate <= today;
+                });
+
+                if (reviewQuestions.length === 0) {
+                    alert('🎉 오늘 복습할 문제가 없습니다!\n\n모든 문제를 잘 학습하셨거나\n아직 풀지 않은 과목이 있습니다.');
+                    return;
+                }
+
+                currentQuestions = reviewQuestions;
+                currentIndex = 0;
+                sessionCorrect = 0;
+                sessionWrong = 0;
+                renderQuestion();
+                switchView('view-quiz');
+            });
             document.getElementById('btn-help').addEventListener('click', () => {
               helpOverlay.classList.add('active');
             });
