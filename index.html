@@ -561,6 +561,18 @@
             color: #1a1a1a;
             line-height: 1.8;
         }
+        /* 객관식 보기 목록 (G-02 문제 화면) */
+        .choices-list {
+            list-style: none;
+            margin-top: 4px;
+        }
+        .choices-list li {
+            font-size: 20px;
+            font-weight: 500;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding: 6px 0;
+        }
     </style>
 </head>
 <body>
@@ -730,6 +742,10 @@
                 <div class="question-card">
                     <div class="question-number">Q. 3</div>
                     <h3 class="question-text">사람의 제일 되는 목적은 무엇입니까?</h3>
+                    <div class="choices-area" id="quiz-choices" style="display:none;">
+                        <hr class="divider">
+                        <ul class="choices-list"></ul>
+                    </div>
                 </div>
             </main>
 
@@ -2037,6 +2053,19 @@
                 document.querySelector('#view-quiz .quiz-subject')
                   .textContent = q.subjectName;
 
+                // 객관식 보기 표시 (choices 있을 때만)
+                const choicesArea = document.getElementById('quiz-choices');
+                const choicesList = choicesArea.querySelector('.choices-list');
+                if (q.choices && q.choices.length > 0) {
+                    choicesList.innerHTML = q.choices
+                        .map((c, i) => `<li>${i + 1}) ${c}</li>`)
+                        .join('');
+                    choicesArea.style.display = 'block';
+                } else {
+                    choicesList.innerHTML = '';
+                    choicesArea.style.display = 'none';
+                }
+
                 // 진행률 업데이트
                 const total = currentQuestions.length;
                 const current = currentIndex + 1;
@@ -2193,6 +2222,7 @@
             const btnBacks = document.querySelectorAll('.btn-back');
             btnBacks.forEach(btn => {
                 btn.addEventListener('click', () => {
+                    updateHomeCards(); // 뒤로가기 시 진행률 및 뱃지 업데이트
                     switchView('view-home');
                 });
             });
