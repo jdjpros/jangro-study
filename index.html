@@ -790,6 +790,150 @@
             line-height: 1.6;
             padding: 6px 0;
         }
+
+        /* 주관식 키워드 체크박스 영역 */
+        .keyword-check-area {
+            margin-top: 20px;
+        }
+        .keyword-check-label {
+            font-size: 17px;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .keyword-check-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .keyword-check-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .keyword-check-item.checked {
+            background: #f0fdf4;
+            border-color: #22c55e;
+        }
+        .keyword-check-item input[type=checkbox] {
+            width: 24px;
+            height: 24px;
+            accent-color: #22c55e;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .keyword-check-item span {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .keyword-check-item.checked span {
+            color: #16a34a;
+        }
+        .keyword-check-hint {
+            margin-top: 12px;
+            font-size: 16px;
+            color: #94a3b8;
+            text-align: center;
+        }
+
+        /* 카카오 인앱 브라우저 안내 팝업 */
+        .kakao-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 300;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+        .kakao-overlay.active { display: flex; }
+        .kakao-modal {
+            background: #ffffff;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            padding: 32px 24px 24px 24px;
+            text-align: center;
+        }
+        .kakao-emoji { font-size: 52px; margin-bottom: 16px; }
+        .kakao-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        .kakao-desc {
+            font-size: 18px;
+            color: #475569;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+        .kakao-step {
+            background: #f0f9ff;
+            border: 2px solid #bae6fd;
+            border-radius: 12px;
+            padding: 16px 20px;
+            text-align: left;
+            margin-bottom: 24px;
+            font-size: 18px;
+            color: #1a1a1a;
+            line-height: 1.8;
+        }
+        .kakao-btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .kakao-btn-close {
+            width: 100%;
+            min-height: 52px;
+            font-size: 18px;
+            font-weight: 700;
+            background-color: #1e3a5f;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .kakao-btn-dismiss {
+            width: 100%;
+            min-height: 44px;
+            font-size: 16px;
+            font-weight: 600;
+            background: none;
+            color: #94a3b8;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        /* 주관식 다음 문제 버튼 */
+        .btn-next {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 56px;
+            font-size: 22px;
+            font-weight: 700;
+            background-color: #1e3a5f;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-next:active { background-color: #0f172a; }
     </style>
 </head>
 <body>
@@ -1036,14 +1180,26 @@
                         사람의 제일 되는 목적은 하나님을 <mark>영화롭게</mark> 하는 것과 
                         영원토록 그를 <mark>즐거워하는</mark> 것입니다.
                     </p>
+
+                    <!-- 주관식: 키워드 체크 영역 (JS로 표시/숨김) -->
+                    <div class="keyword-check-area" id="keyword-check-area" style="display:none;">
+                        <span class="keyword-check-label">✏️ 내가 말한 키워드에 체크하세요</span>
+                        <div class="keyword-check-list" id="keyword-check-list"></div>
+                        <p class="keyword-check-hint">몰랐거나 말 못했으면 체크 없이 다음 문제를 누르세요</p>
+                    </div>
                 </div>
             </main>
 
             <div class="bottom-fixed" id="bottom-answer">
-                <div class="btn-group-half">
+                <!-- 객관식: 몰랐음/알았음 (JS로 표시/숨김) -->
+                <div class="btn-group-half" id="btn-group-objective">
                     <button type="button" class="btn-half btn-wrong">❌ 몰랐음</button>
                     <button type="button" class="btn-half btn-correct">⭕ 알았음</button>
                 </div>
+                <!-- 주관식: 다음 문제 버튼 (JS로 표시/숨김) -->
+                <button type="button" class="btn-next" id="btn-next" style="display:none;">
+                    다음 문제 →
+                </button>
             </div>
 
         </section>
@@ -1163,6 +1319,32 @@
                 <div id="subject-manage-list" style="display:flex; flex-direction:column; gap:10px;">
                     <!-- JS로 렌더링 -->
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 카카오 인앱 브라우저 안내 팝업 -->
+    <div class="kakao-overlay" id="kakao-overlay">
+        <div class="kakao-modal">
+            <div class="kakao-emoji">📱</div>
+            <div class="kakao-title">카카오톡에서 열렸어요</div>
+            <div class="kakao-desc">
+                이 앱은 <b>삼성 인터넷</b> 또는 <b>Chrome</b>에서<br>
+                가장 잘 동작합니다.
+            </div>
+            <div class="kakao-step">
+                <b>외부 브라우저로 여는 방법</b><br><br>
+                하단 또는 우측 상단 메뉴 <b>⋮</b> 를 누른 후<br>
+                <b>"다른 브라우저로 열기"</b> 또는<br>
+                <b>"기본 브라우저로 열기"</b> 를 선택하세요.
+            </div>
+            <div class="kakao-btn-group">
+                <button type="button" class="kakao-btn-close" id="kakao-btn-close">
+                    그냥 여기서 볼게요
+                </button>
+                <button type="button" class="kakao-btn-dismiss" id="kakao-btn-dismiss">
+                    다시 보지 않기
+                </button>
             </div>
         </div>
     </div>
@@ -2211,12 +2393,18 @@
                 progress[questionId] = { status: "unknown", reviewDate: "", failCount: 0, correctStreak: 0 };
               }
               const r = progress[questionId];
-              if (isCorrect) {
+              if (isCorrect === true) {
                 r.status = "known";
                 r.correctStreak += 1;
                 if (r.correctStreak === 1) r.reviewDate = getDateStr(3);
                 else if (r.correctStreak === 2) r.reviewDate = getDateStr(7);
                 else r.reviewDate = getDateStr(30);
+              } else if (isCorrect === 'vague') {
+                // 키워드 일부 체크: 애매함 → 3일 후, streak 리셋
+                r.status = "unknown";
+                r.failCount += 1;
+                r.correctStreak = 0;
+                r.reviewDate = getDateStr(3);
               } else {
                 r.status = "unknown";
                 r.failCount += 1;
@@ -2390,30 +2578,56 @@
                 document.querySelector('#view-answer .quiz-subject')
                   .textContent = q.subjectName;
 
-                // choices가 있으면 객관식 보기 표시, 없으면 기존 정답 표시
+                // choices가 있으면 객관식, 없으면 주관식 키워드 체크
+                const keywordCheckArea = document.getElementById('keyword-check-area');
+                const keywordCheckList = document.getElementById('keyword-check-list');
+                const btnGroupObjective = document.getElementById('btn-group-objective');
+                const btnNext = document.getElementById('btn-next');
+
                 let answerHtml;
                 if (q.choices && q.choices.length > 0) {
-                  // 객관식: 보기 4개를 줄바꿈으로 표시하고 정답에 하이라이트
+                  // 객관식: 보기 하이라이트 + 몰랐음/알았음 버튼
                   answerHtml = q.choices.map((choice, idx) => {
                     const num = idx + 1;
-                    // 정답 번호 추출 (answer가 "2) 자동적으로..." 형태일 때)
                     const answerNum = parseInt(q.answer.match(/^(\d+)\)/)?.[1]);
                     const isCorrect = num === answerNum;
                     const choiceText = `${num}) ${choice}`;
-                    return isCorrect
-                      ? `<mark>${choiceText}</mark>`
-                      : choiceText;
+                    return isCorrect ? `<mark>${choiceText}</mark>` : choiceText;
                   }).join('<br>');
+
+                  keywordCheckArea.style.display = 'none';
+                  btnGroupObjective.style.display = 'flex';
+                  btnNext.style.display = 'none';
+
                 } else {
-                  // 주관식: 1) 2) 3) 4) 앞에 줄바꿈 추가
+                  // 주관식: 줄바꿈 + 키워드 하이라이트
                   answerHtml = q.answer.replace(/(?<!^)(\s*[①②③④⑤1-9]\))/g, '<br>$1');
-                  // 키워드 하이라이트
                   q.keywords.forEach(keyword => {
                     answerHtml = answerHtml.replace(
                       new RegExp(keyword, 'g'),
                       `<mark>${keyword}</mark>`
                     );
                   });
+
+                  // 키워드 체크박스 렌더링
+                  keywordCheckList.innerHTML = q.keywords.map((kw, i) => `
+                    <label class="keyword-check-item" id="kw-item-${i}">
+                      <input type="checkbox" id="kw-cb-${i}" value="${i}">
+                      <span>${kw}</span>
+                    </label>
+                  `).join('');
+
+                  // 체크 시 시각적 피드백
+                  keywordCheckList.querySelectorAll('input[type=checkbox]').forEach(cb => {
+                    cb.addEventListener('change', () => {
+                      const item = cb.closest('.keyword-check-item');
+                      item.classList.toggle('checked', cb.checked);
+                    });
+                  });
+
+                  keywordCheckArea.style.display = 'block';
+                  btnGroupObjective.style.display = 'none';
+                  btnNext.style.display = 'flex';
                 }
                 document.querySelector('#view-answer .answer-text')
                   .innerHTML = answerHtml;
@@ -2511,7 +2725,46 @@
                 });
             }
 
-            // (5) G-02, G-03 "← 뒤로" 버튼 클릭 -> view-home으로 전환
+            // (4-b) G-03 주관식 "다음 문제 →" 버튼: 키워드 체크 수로 자동 판정
+            const btnNext = document.getElementById('btn-next');
+            if (btnNext) {
+                btnNext.addEventListener('click', () => {
+                    const q = currentQuestions[currentIndex];
+                    const checkboxes = document.querySelectorAll('#keyword-check-list input[type=checkbox]');
+                    const total = checkboxes.length;
+                    const checked = [...checkboxes].filter(cb => cb.checked).length;
+
+                    // 판정: 전부 ✅ → 알았음 / 일부 ✅ → 애매함 / 없음 → 몰랐음
+                    let result;
+                    if (checked === total) {
+                        result = true;       // 알았음
+                        sessionCorrect++;
+                    } else if (checked > 0) {
+                        result = 'vague';    // 애매함
+                        sessionWrong++;
+                    } else {
+                        result = false;      // 몰랐음
+                        sessionWrong++;
+                    }
+
+                    recordResult(q.id, result);
+                    currentIndex++;
+
+                    if (currentIndex >= currentQuestions.length) {
+                        const resultItems = document.querySelectorAll('#view-complete .result-item');
+                        resultItems[0].textContent = `✅ 맞은 문제: ${sessionCorrect}문제`;
+                        resultItems[1].textContent = `❌ 틀린 문제: ${sessionWrong}문제`;
+                        const subjectSet = [...new Set(currentQuestions.map(q => q.subjectName))];
+                        resultItems[2].textContent = subjectSet.length > 1
+                          ? `📚 학습한 과목: 복습 모아보기 (${subjectSet.length}과목)`
+                          : `📚 학습한 과목: ${subjectSet[0]}`;
+                        switchView('view-complete');
+                    } else {
+                        renderQuestion();
+                        switchView('view-quiz');
+                    }
+                });
+            }
             const btnBacks = document.querySelectorAll('.btn-back');
             btnBacks.forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -2786,6 +3039,23 @@
             // 앱 시작 시 홈 카드 업데이트
             updateHomeCards();
             updateGoalBadges();
+
+            // 카카오 인앱 브라우저 감지 → 안내 팝업
+            (function() {
+                const ua = navigator.userAgent || '';
+                const isKakao = /KAKAOTALK/i.test(ua);
+                const dismissed = localStorage.getItem('kakaoPopupDismissed');
+                if (isKakao && !dismissed) {
+                    document.getElementById('kakao-overlay').classList.add('active');
+                }
+                document.getElementById('kakao-btn-close').addEventListener('click', () => {
+                    document.getElementById('kakao-overlay').classList.remove('active');
+                });
+                document.getElementById('kakao-btn-dismiss').addEventListener('click', () => {
+                    localStorage.setItem('kakaoPopupDismissed', '1');
+                    document.getElementById('kakao-overlay').classList.remove('active');
+                });
+            })();
 
         });
     </script>
